@@ -2,6 +2,11 @@ name: Build linux image
 
 on:
   workflow_call:
+    inputs:
+      upload:
+        type: boolean
+        required: false
+        default: false
 
 defaults:
   run:
@@ -19,9 +24,11 @@ jobs:
       run: |
         docker build -t ${{ env.IMAGE_NAME }}:ubuntu ./linux
     - name: Export
+      if: ${{ inputs.upload == true }}
       run: |
         docker save -o /tmp/image_ubuntu.tar ${{ env.IMAGE_NAME }}:ubuntu
     - name: Upload image artifact
+      if: ${{ inputs.upload == true }}
       uses: actions/upload-artifact@v4
       with:
         name: image_ubuntu
