@@ -27,7 +27,7 @@ jobs:
     - name: Run container with tests
       if: failure()
       run: |
-        docker run --name gha-runner --runtime sysbox-runc -e TEST_ONLY_RUN=yes -e REPO=Ableytner/docker-github-actions-runner -e TOKEN=XXXX ${{ env.IMAGE_NAME }}:latest
+        docker run --name gha-runner --runtime sysbox-runc -e TEST_ONLY_RUN=yes -e REPO=Ableytner/docker-github-actions-runner -e TOKEN=XXXX ${{ env.IMAGE_NAME }}:latest-ubuntu
         if [[ $? -ne 0 ]]; then
           echo "tests failed!"
           exit 1
