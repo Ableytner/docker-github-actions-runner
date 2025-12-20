@@ -9,6 +9,3 @@ echo $container_id
 docker logs $container_id
 docker rm $container_id
 docker container ls
-
-# run some docker container for testing
-echo "test succeeded!"

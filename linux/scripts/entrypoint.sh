@@ -33,6 +33,7 @@ fi
 # [RUN TESTS]
 if [[ -v TEST_ONLY_RUN ]]; then
     /run-tests.sh
+    echo "all tests succeeded!"
     exit 0
 fi
 
