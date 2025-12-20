@@ -26,8 +26,14 @@ if [[ "$(service docker status)" == *"Docker is running"* ]]; then
     echo "Done!"
 else
     echo "Docker didn't start, status is:"
-    echo $(service docker status)
+    service docker status
     exit 1
+fi
+
+# [RUN TESTS]
+if [[ -v TEST_ONLY_RUN ]]; then
+    /run-tests.sh
+    exit 0
 fi
 
 # [START]
