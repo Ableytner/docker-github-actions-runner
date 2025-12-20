@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-# NOTE: CONTAINERD_VERSION needs to stay the same due to:
+# NOTE: CONTAINERD_VERSION needs to stay at 1.7.28 due to:
 # https://github.com/nestybox/sysbox/issues/973
 ARG RUNNER_VERSION="2.330.0" \
   CONTAINERD_VERSION="1.7.28" \
