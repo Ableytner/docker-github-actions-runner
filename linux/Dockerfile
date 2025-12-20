@@ -39,7 +39,11 @@ RUN apt-get update \
   build-essential \
   jq \
   zip \
-  unzip
+  unzip \
+  wget
+
+# install systemd alternative
+RUN wget https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl3.py -O /usr/local/bin/systemctl
 
 # install gh cli
 RUN curl -L -H "Accept: application/vnd.github+json" https://api.github.com/repos/cli/cli/releases/latest \
