@@ -7,6 +7,7 @@ ARG RUNNER_VERSION="2.330.0" \
   DOCKER_VERSION="29.1.3" \
   BUILDX_VERSION="0.30.1" \
   COMPOSE_VERSION="2.40.3" \
+  SYSBOX_VERSION="0.6.7" \
   ARCH="amd64" \
   INSTRUCTION_SET="x64"
 
@@ -41,6 +42,9 @@ RUN apt-get update \
   unzip \
   wget
 
+# install systemd alternative
+RUN wget https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl3.py -O /usr/local/bin/systemctl
+
 # install gh cli
 RUN curl -L -H "Accept: application/vnd.github+json" https://api.github.com/repos/cli/cli/releases/latest \
   | jq -r '.tag_name' \
@@ -63,6 +67,7 @@ RUN mkdir -p /home/runner/tmp \
   && curl -L ${BASE_URL}/docker-ce-cli_${DOCKER_VERSION}-1~ubuntu.22.04~jammy_${ARCH}.deb -o ./docker-ce-cli.deb \
   && curl -L ${BASE_URL}/docker-buildx-plugin_${BUILDX_VERSION}-1~ubuntu.22.04~jammy_${ARCH}.deb -o ./docker-buildx-plugin.deb \
   && curl -L ${BASE_URL}/docker-compose-plugin_${COMPOSE_VERSION}-1~ubuntu.22.04~jammy_${ARCH}.deb -o ./docker-compose-plugin.deb \
+  && curl -L https://downloads.nestybox.com/sysbox/releases/v${SYSBOX_VERSION}/sysbox-ce_${SYSBOX_VERSION}-0.linux_amd64.deb -o ./sysbox.deb \
   && apt-get install -y $(ls *.deb | sed -e "s/^/.\//") \
   && rm $(ls *.deb) \
   && sed -i 's/ulimit -Hn/# ulimit -Hn/g' /etc/init.d/docker \
