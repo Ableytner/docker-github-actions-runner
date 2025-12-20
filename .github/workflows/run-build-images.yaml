@@ -35,11 +35,11 @@ jobs:
     - name: Print out server container logs
       if: failure()
       run: |
-        docker logs ${{ env.CONTAINER_ID }}
+        docker logs gha-runner
     - name: Stop and delete server container
       if: always()
       run: |
-        docker rm -f ${{ env.CONTAINER_ID }}
+        docker rm -f gha-runner
 
   push:
     needs: [test-linux]
