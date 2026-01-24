@@ -1,0 +1,52 @@
+name: Build and push linux images
+
+on:
+  workflow_call:
+    inputs:
+      version_number:
+        required: false
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-push-linux:
+    runs-on: [self-hosted, linux]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: lowercase github.repository
+      run: |
+        echo "IMAGE_NAME=`echo ${{github.repository}} | tr '[:upper:]' '[:lower:]'`" >>${GITHUB_ENV}
+    - name: Docker meta
+      uses: docker/metadata-action@v5
+      id: meta
+      with:
+        images: |
+          ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+        tags: |
+          # always release image under 'dev-ubuntu' tag
+          type=raw,value=dev-ubuntu
+          # release under 'latest-ubuntu' tag if set
+          type=raw,value=latest-ubuntu,enable=${{ github.event.inputs.version_number != "" }}
+          # release under version tag
+          type=raw,value=${{ github.event.inputs.version_number }}-ubuntu,enable=${{ github.event.inputs.version_number != "" }}
+        labels: |
+          org.opencontainers.image.authors=Ableytner
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        context: ./linux
+        platforms: linux/amd64,linux/arm64
+        pull: true
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}

@@ -1,5 +1,7 @@
 FROM ubuntu:24.04
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # NOTE: CONTAINERD_VERSION needs to stay at 1.7.28 due to:
 # https://github.com/nestybox/sysbox/issues/973
 ARG RUNNER_VERSION="2.331.0" \
@@ -7,8 +9,8 @@ ARG RUNNER_VERSION="2.331.0" \
   DOCKER_VERSION="29.1.5" \
   BUILDX_VERSION="0.30.1" \
   COMPOSE_VERSION="2.40.3" \
-  ARCH="amd64" \
-  INSTRUCTION_SET="x64"
+  ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
+  INSTRUCTION_SET="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x64/)"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
