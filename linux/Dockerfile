@@ -8,9 +8,7 @@ ARG RUNNER_VERSION="2.331.0" \
   CONTAINERD_VERSION="1.7.28" \
   DOCKER_VERSION="29.1.5" \
   BUILDX_VERSION="0.30.1" \
-  COMPOSE_VERSION="2.40.3" \
-  ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
-  INSTRUCTION_SET="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x64/)"
+  COMPOSE_VERSION="2.40.3"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -23,7 +21,8 @@ RUN apt-get update \
   && chmod 777 /opt/hostedtoolcache
 
 # install github actions runner
-RUN mkdir -p /home/runner/actions-runner \
+RUN INSTRUCTION_SET="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x64/)" \
+  && mkdir -p /home/runner/actions-runner \
   && curl -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${INSTRUCTION_SET}-${RUNNER_VERSION}.tar.gz -o /home/runner/actions-runner/actions.tar.gz \
   && cd /home/runner/actions-runner \
   && tar -xzf actions.tar.gz \
@@ -44,7 +43,8 @@ RUN apt-get update \
   wget
 
 # install gh cli
-RUN curl -L -H "Accept: application/vnd.github+json" https://api.github.com/repos/cli/cli/releases/latest \
+RUN ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
+  && curl -L -H "Accept: application/vnd.github+json" https://api.github.com/repos/cli/cli/releases/latest \
   | jq -r '.tag_name' \
   | sed 's/^v//g' \
   > /tmp/ghcli_vers.txt \
@@ -57,9 +57,10 @@ RUN curl -L -H "Accept: application/vnd.github+json" https://api.github.com/repo
   && rm /tmp/ghcli.deb
 
 # install docker
-RUN mkdir -p /home/runner/tmp \
+RUN BASE_URL="https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/${ARCH}" \
+  && ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
+  && mkdir -p /home/runner/tmp \
   && cd /home/runner/tmp \
-  && BASE_URL="https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/${ARCH}" \
   && curl -L ${BASE_URL}/containerd.io_${CONTAINERD_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./containerd.io.deb \
   && curl -L ${BASE_URL}/docker-ce_${DOCKER_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./docker-ce.deb \
   && curl -L ${BASE_URL}/docker-ce-cli_${DOCKER_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./docker-ce-cli.deb \
