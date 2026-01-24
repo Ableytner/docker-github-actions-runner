@@ -36,9 +36,9 @@ jobs:
           # always release image under 'dev-ubuntu' tag
           type=raw,value=dev-ubuntu
           # release under 'latest-ubuntu' tag if set
-          type=raw,value=latest-ubuntu,enable=${{ github.event.inputs.version_number != "" }}
+          type=raw,value=latest-ubuntu,enable=${{ github.event.inputs.version_number != '' }}
           # release under version tag
-          type=raw,value=${{ github.event.inputs.version_number }}-ubuntu,enable=${{ github.event.inputs.version_number != "" }}
+          type=raw,value=${{ github.event.inputs.version_number }}-ubuntu,enable=${{ github.event.inputs.version_number != '' }}
         labels: |
           org.opencontainers.image.authors=Ableytner
     - name: Build and push
