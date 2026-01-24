@@ -1,10 +1,10 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # NOTE: CONTAINERD_VERSION needs to stay at 1.7.28 due to:
 # https://github.com/nestybox/sysbox/issues/973
-ARG RUNNER_VERSION="2.330.0" \
+ARG RUNNER_VERSION="2.331.0" \
   CONTAINERD_VERSION="1.7.28" \
-  DOCKER_VERSION="29.1.3" \
+  DOCKER_VERSION="29.1.5" \
   BUILDX_VERSION="0.30.1" \
   COMPOSE_VERSION="2.40.3" \
   ARCH="amd64" \
@@ -57,12 +57,12 @@ RUN curl -L -H "Accept: application/vnd.github+json" https://api.github.com/repo
 # install docker
 RUN mkdir -p /home/runner/tmp \
   && cd /home/runner/tmp \
-  && BASE_URL="https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/${ARCH}" \
-  && curl -L ${BASE_URL}/containerd.io_${CONTAINERD_VERSION}-1~ubuntu.22.04~jammy_${ARCH}.deb -o ./containerd.io.deb \
-  && curl -L ${BASE_URL}/docker-ce_${DOCKER_VERSION}-1~ubuntu.22.04~jammy_${ARCH}.deb -o ./docker-ce.deb \
-  && curl -L ${BASE_URL}/docker-ce-cli_${DOCKER_VERSION}-1~ubuntu.22.04~jammy_${ARCH}.deb -o ./docker-ce-cli.deb \
-  && curl -L ${BASE_URL}/docker-buildx-plugin_${BUILDX_VERSION}-1~ubuntu.22.04~jammy_${ARCH}.deb -o ./docker-buildx-plugin.deb \
-  && curl -L ${BASE_URL}/docker-compose-plugin_${COMPOSE_VERSION}-1~ubuntu.22.04~jammy_${ARCH}.deb -o ./docker-compose-plugin.deb \
+  && BASE_URL="https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/${ARCH}" \
+  && curl -L ${BASE_URL}/containerd.io_${CONTAINERD_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./containerd.io.deb \
+  && curl -L ${BASE_URL}/docker-ce_${DOCKER_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./docker-ce.deb \
+  && curl -L ${BASE_URL}/docker-ce-cli_${DOCKER_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./docker-ce-cli.deb \
+  && curl -L ${BASE_URL}/docker-buildx-plugin_${BUILDX_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./docker-buildx-plugin.deb \
+  && curl -L ${BASE_URL}/docker-compose-plugin_${COMPOSE_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./docker-compose-plugin.deb \
   && apt-get install -y $(ls *.deb | sed -e "s/^/.\//") \
   && rm $(ls *.deb) \
   && sed -i 's/ulimit -Hn/# ulimit -Hn/g' /etc/init.d/docker \
