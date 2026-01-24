@@ -57,8 +57,8 @@ RUN ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
   && rm /tmp/ghcli.deb
 
 # install docker
-RUN BASE_URL="https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/${ARCH}" \
-  && ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
+RUN ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
+  && BASE_URL="https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/${ARCH}" \
   && mkdir -p /home/runner/tmp \
   && cd /home/runner/tmp \
   && curl -L ${BASE_URL}/containerd.io_${CONTAINERD_VERSION}-1~ubuntu.24.04~noble_${ARCH}.deb -o ./containerd.io.deb \
