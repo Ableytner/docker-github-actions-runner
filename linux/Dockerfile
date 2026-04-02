@@ -42,6 +42,13 @@ RUN apt-get update \
   unzip \
   wget
 
+# install tzdata and reconfigure
+RUN ln -snf /usr/share/zoneinfo/$(curl -f https://ipapi.co/timezone) /etc/localtime \
+  && export DEBIAN_FRONTEND=noninteractive \
+  && apt-get update \
+  && apt-get install -y tzdata \
+  && dpkg-reconfigure --frontend noninteractive tzdata
+
 # install gh cli
 RUN ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
   && curl -L -H "Accept: application/vnd.github+json" https://api.github.com/repos/cli/cli/releases/latest \
