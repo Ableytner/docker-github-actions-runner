@@ -2,13 +2,11 @@ FROM ubuntu:24.04
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# NOTE: CONTAINERD_VERSION needs to stay at 1.7.28 due to:
-# https://github.com/nestybox/sysbox/issues/973
-ARG RUNNER_VERSION="2.334.0" \
-  CONTAINERD_VERSION="1.7.28" \
-  DOCKER_VERSION="29.4.2" \
-  BUILDX_VERSION="0.33.0" \
-  COMPOSE_VERSION="5.1.3"
+ARG RUNNER_VERSION="2.336.0" \
+  CONTAINERD_VERSION="2.3.3" \
+  DOCKER_VERSION="29.7.2" \
+  BUILDX_VERSION="0.36.1" \
+  COMPOSE_VERSION="5.4.0"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
