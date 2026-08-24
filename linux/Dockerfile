@@ -40,7 +40,8 @@ RUN apt-get update \
   jq \
   zip \
   unzip \
-  wget
+  wget \
+  dotnet-sdk-10.0
 
 # install tzdata and reconfigure
 RUN ln -snf /usr/share/zoneinfo/$(curl -f https://ipapi.co/timezone) /etc/localtime \
