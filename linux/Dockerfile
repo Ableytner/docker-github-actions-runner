@@ -80,7 +80,9 @@ RUN ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
   && usermod -aG docker runner
 
 # install dotnet 10 SDK
-RUN curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
+RUN sudo apt-get update \
+  && sudo apt-get install -y ca-certificates libc6 libgcc-s1 libgssapi-krb5-2 libssl3 libstdc++6 zlib1g \
+  && curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
   && chmod +x ./dotnet-install.sh \
   && ./dotnet-install.sh --version latest \
   && rm ./dotnet-install.sh
