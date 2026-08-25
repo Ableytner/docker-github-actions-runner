@@ -40,8 +40,7 @@ RUN apt-get update \
   jq \
   zip \
   unzip \
-  wget \
-  dotnet-sdk-10.0
+  wget
 
 # install tzdata and reconfigure
 RUN ln -snf /usr/share/zoneinfo/$(curl -f https://ipapi.co/timezone) /etc/localtime \
@@ -79,6 +78,12 @@ RUN ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)" \
   && sed -i 's/ulimit -Hn/# ulimit -Hn/g' /etc/init.d/docker \
   && getent group docker || groupadd docker > /dev/null \
   && usermod -aG docker runner
+
+# install dotnet 10 SDK
+RUN curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
+  && chmod +x ./dotnet-install.sh \
+  && ./dotnet-install.sh --version latest \
+  && rm ./dotnet-install.sh
 
 COPY --chmod=755 scripts/* /
 
