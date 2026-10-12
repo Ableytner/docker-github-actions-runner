@@ -51,30 +51,31 @@ jobs:
       run: |
         set +e
 
-        URL="https://github.com/actions/runner/releases/download/v2.336.0/actions-runner-linux-x64-2.336.0.tar.gz"
+        echo "=== Interfaces ==="
+        ip -br addr
 
-        echo "=== A: ARC runner network ==="
-        curl -4 -sS -L -o /dev/null \
-          --connect-timeout 10 --max-time 60 \
-          -w 'HTTP=%{http_code} connect=%{time_connect}s TLS=%{time_appconnect}s total=%{time_total}s\n' \
-          "$URL"
-        echo "exit=$?"
+        echo "=== IPv4 routes ==="
+        ip route
 
-        echo "=== B: nested Docker bridge ==="
-        docker run --rm --network bridge curlimages/curl:latest \
-          -4 -sS -L -o /dev/null \
-          --connect-timeout 10 --max-time 60 \
-          -w 'HTTP=%{http_code} connect=%{time_connect}s TLS=%{time_appconnect}s total=%{time_total}s\n' \
-          "$URL"
-        echo "exit=$?"
+        echo "=== Default route ==="
+        ip route show default
 
-        echo "=== C: nested Docker host network ==="
-        docker run --rm --network host curlimages/curl:latest \
-          -4 -sS -L -o /dev/null \
-          --connect-timeout 10 --max-time 60 \
-          -w 'HTTP=%{http_code} connect=%{time_connect}s TLS=%{time_appconnect}s total=%{time_total}s\n' \
-          "$URL"
-        echo "exit=$?"
+        echo "=== IPv4 forwarding ==="
+        cat /proc/sys/net/ipv4/ip_forward
+
+        echo "=== NAT table ==="
+        iptables -t nat -nvL
+
+        echo "=== FORWARD chain ==="
+        iptables -nvL FORWARD
+
+        echo "=== Docker bridge details ==="
+        docker network inspect bridge
+
+        echo "=== Docker daemon network settings ==="
+        docker info
+
+        exit 1
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
