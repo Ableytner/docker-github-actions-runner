@@ -49,33 +49,33 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: (Debug) test network config
       run: |
-        set +e
+        echo "=== Nested bridge: DNS and TCP/TLS ==="
+        docker run --rm curlimages/curl:latest \
+          -4 -v -L \
+          --connect-timeout 5 \
+          --max-time 15 \
+          -o /dev/null \
+          -w '\nHTTP=%{http_code} remote_ip=%{remote_ip} connect=%{time_connect} tls=%{time_appconnect}\n' \
+          https://github.com/
 
-        echo "=== Interfaces ==="
-        ip -br addr
+        echo "=== Nested bridge: direct TCP port check ==="
+        docker run --rm --entrypoint sh curlimages/curl:latest -c '
+          if command -v nc >/dev/null 2>&1; then
+            nc -vz -w 5 github.com 443
+          else
+            echo "nc unavailable; use the curl trace above"
+          fi
+        '
 
-        echo "=== IPv4 routes ==="
-        ip route
+        echo "=== Docker daemon configuration ==="
+        cat /etc/docker/daemon.json 2>/dev/null || true
 
-        echo "=== Default route ==="
-        ip route show default
+        echo "=== Docker networks ==="
+        docker network ls
 
-        echo "=== IPv4 forwarding ==="
-        cat /proc/sys/net/ipv4/ip_forward
-
-        echo "=== NAT table ==="
-        iptables -t nat -nvL
-
-        echo "=== FORWARD chain ==="
-        iptables -nvL FORWARD
-
-        echo "=== Docker bridge details ==="
-        docker network inspect bridge
-
-        echo "=== Docker daemon network settings ==="
-        docker info
-
-        exit 1
+        echo "=== Buildx builders ==="
+        docker buildx ls
+        docker buildx inspect
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
