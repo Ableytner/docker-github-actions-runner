@@ -10,6 +10,8 @@ services:
       TOKEN: ${TOKEN}
       # These are in addition to self-hosted,Linux,<arch>
       # EXTRA_LABELS: docker,nonroot,example
+      # You can add additional args that are passed to the runner binary
+      # RUNNER_ARGS: --ephemeral
     deploy:
       mode: replicated
       replicas: 2

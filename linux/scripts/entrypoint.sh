@@ -34,7 +34,7 @@ fi
 
 echo "Registering runner..."
 
-cd /home/runner/actions-runner
+cd /home/runner
 
 if [[ -v REPO ]]; then
     REQ_TOKEN_URL=https://api.github.com/repos/${REPO}/actions/runners/registration-token
@@ -61,7 +61,8 @@ rm token_resp.txt
     --name "${RUNNER_NAME:-"runner-ubuntu"}-${HOSTNAME}" \
     --unattended \
     --disableupdate \
-    --labels "${EXTRA_LABELS:-}"
+    --labels "${EXTRA_LABELS:-}" \
+    "${RUNNER_ARGS:-}"
 
 cleanup() {
     echo "Removing runner..."

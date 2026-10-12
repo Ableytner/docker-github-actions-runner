@@ -75,3 +75,21 @@ To stop the containers:
 ```bash
 docker compose down
 ```
+
+### Github ARC
+
+This image can also be used with Github Actions Runner Controller (ARC).
+
+To use it, modify the `values.yaml` during the ScaleSet installation:
+```yaml
+template:
+  spec:
+    runtimeClassName: sysbox-runc
+    hostUsers: false
+    containers:
+      - name: runner
+        image: "ghcr.io/ableytner/docker-github-actions-runner:dev-ubuntu"
+        imagePullPolicy: Always
+        command:
+          - /entrypoint-arc.sh
+```
