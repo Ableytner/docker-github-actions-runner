@@ -47,12 +47,9 @@ jobs:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: (Debug) test ip configuration
-      run: |
-        docker network inspect bridge
     - name: (Debug) test archive download
       run: |
-        docker run --rm curlimages/curl:latest \
+        docker run --rm --network host curlimages/curl:latest \
         -v --connect-timeout 20 \
         -o /dev/null \
         'https://github.com/actions/runner/releases/download/v2.336.0/actions-runner-linux-x64-2.336.0.tar.gz'
