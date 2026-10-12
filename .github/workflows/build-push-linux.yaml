@@ -57,7 +57,7 @@ jobs:
             --max-time 15 \
             -o /dev/null \
             -w '\nHTTP=%{http_code} remote_ip=%{remote_ip} connect=%{time_connect} tls=%{time_appconnect}\n' \
-            https://github.com/
+            https://github.com/ || true
         done
     - name: Build and push
       uses: docker/build-push-action@v6
