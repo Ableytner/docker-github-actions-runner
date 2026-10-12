@@ -21,9 +21,10 @@ RUN apt-get update \
   && chmod 777 /opt/hostedtoolcache
 
 # install github actions runner
-RUN INSTRUCTION_SET="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x64/)" \
+RUN ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x64/)" \
   && mkdir -p /home/runner \
-  && curl -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${INSTRUCTION_SET}-${RUNNER_VERSION}.tar.gz -o /home/runner/actions.tar.gz \
+  && echo "requesting https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz" \
+  && curl -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz -o /home/runner/actions.tar.gz \
   && cd /home/runner \
   && tar -xzf actions.tar.gz \
   && rm actions.tar.gz \
