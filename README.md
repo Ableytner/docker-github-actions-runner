@@ -91,5 +91,5 @@ template:
         image: "ghcr.io/ableytner/docker-github-actions-runner:dev-ubuntu"
         imagePullPolicy: Always
         command:
-          - /home/runner/run.sh
+          - /entrypoint-arc.sh
 ```
