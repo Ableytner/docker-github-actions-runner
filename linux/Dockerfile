@@ -23,19 +23,7 @@ RUN apt-get update \
 # install github actions runner
 RUN ARCH="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x64/)" \
   && mkdir -p /home/runner \
-  && RUNNER_URL="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz" \
-  && echo "Downloading ${RUNNER_URL}" \
-  && curl \
-       --fail \
-       --show-error \
-       --location \
-       --retry 5 \
-       --retry-all-errors \
-       --retry-delay 2 \
-       --connect-timeout 20 \
-       --max-time 600 \
-       --output /home/runner/actions.tar.gz \
-       "${RUNNER_URL}" \
+  && curl -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz -o /home/runner/actions.tar.gz \
   && cd /home/runner \
   && tar -xzf actions.tar.gz \
   && rm actions.tar.gz \
