@@ -34,7 +34,7 @@ fi
 
 echo "Registering runner..."
 
-cd /home/runner/actions-runner
+cd /home/runner
 
 if [[ -v REPO ]]; then
     REQ_TOKEN_URL=https://api.github.com/repos/${REPO}/actions/runners/registration-token

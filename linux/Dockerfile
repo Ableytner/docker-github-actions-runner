@@ -14,7 +14,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
   && apt-get install -y curl jq sudo \
-  && useradd -m runner \
+  && useradd -m -G 0 runner \
   && usermod -aG sudo runner \
   && echo '%sudo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers \
   && mkdir /opt/hostedtoolcache \
@@ -22,12 +22,12 @@ RUN apt-get update \
 
 # install github actions runner
 RUN INSTRUCTION_SET="$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x64/)" \
-  && mkdir -p /home/runner/actions-runner \
-  && curl -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${INSTRUCTION_SET}-${RUNNER_VERSION}.tar.gz -o /home/runner/actions-runner/actions.tar.gz \
-  && cd /home/runner/actions-runner \
+  && mkdir -p /home/runner \
+  && curl -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${INSTRUCTION_SET}-${RUNNER_VERSION}.tar.gz -o /home/runner/actions.tar.gz \
+  && cd /home/runner \
   && tar -xzf actions.tar.gz \
   && rm actions.tar.gz \
-  && chown -R runner /home/runner/actions-runner \
+  && chown -R runner /home/runner \
   && ./bin/installdependencies.sh
 
 # install simple apt packages
@@ -84,5 +84,7 @@ COPY --chmod=755 scripts/* /
 
 # switch to the runner user
 USER runner
+
+WORKDIR /home/runner
 
 ENTRYPOINT ["/entrypoint.sh"]
