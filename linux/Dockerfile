@@ -4,7 +4,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # NOTE: CONTAINERD_VERSION needs to stay at 1.7.28 due to:
 # https://github.com/nestybox/sysbox/issues/973
-ARG RUNNER_VERSION="2.336.0" \
+ARG RUNNER_VERSION="2.338.2" \
   CONTAINERD_VERSION="1.7.28" \
   DOCKER_VERSION="29.4.2" \
   BUILDX_VERSION="0.33.0" \
